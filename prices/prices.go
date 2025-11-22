@@ -14,6 +14,7 @@ type TaxIncludedPriceJob struct{
 }
 
 
+
 func (job *TaxIncludedPriceJob)Process(){
 	job.LoadData()
 	result := make(map[string]string)
@@ -25,7 +26,7 @@ func (job *TaxIncludedPriceJob)Process(){
 		fmt.Println(result)
 }
 
-func (job TaxIncludedPriceJob) LoadData(){
+func (job *TaxIncludedPriceJob) LoadData(){
 	file, err := os.Open("prices.txt")
 	if err != nil {
 		fmt.Println("Couldn't open file!")
@@ -44,7 +45,7 @@ func (job TaxIncludedPriceJob) LoadData(){
 		file.Close()
 		return 
 	}
-
+	prices := make([]float64, len(lines))
 	for lineIndex, line := range lines{
 		 floatPrice , err := strconv.ParseFloat(line, 64)
 		 if err != nil {
@@ -53,8 +54,10 @@ func (job TaxIncludedPriceJob) LoadData(){
 			file.Close()
 			return
 		}
-		job.InputPrices[lineIndex] = floatPrice
+		prices[lineIndex] = floatPrice
 	}
+
+	job.InputPrices = prices
 
 }
 
