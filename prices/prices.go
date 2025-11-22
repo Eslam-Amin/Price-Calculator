@@ -16,12 +16,13 @@ type TaxIncludedPriceJob struct{
 
 
 
-func (job *TaxIncludedPriceJob)Process(donechan chan bool) {
-	job.LoadData()
+func (job *TaxIncludedPriceJob)Process(donechan chan bool, errChan chan error) {
+	err:=job.LoadData()
 	
-	// if err != nil {
-	// 	return err
-	// }
+	if err != nil {
+		errChan <- err
+		return
+	}
 	
 	result := make(map[string]string)
 		for _, price := range job.InputPrices{
